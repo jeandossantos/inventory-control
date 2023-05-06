@@ -32,3 +32,5 @@ export class CreateProductDto {
   @IsNotEmpty()
   salePrice: string;
 }
+
+export class UpdateProductDto extends CreateProductDto {}
