@@ -1,12 +1,15 @@
+import { OmitType } from '@nestjs/mapped-types';
 import {
   IsNotEmpty,
   IsNumber,
   IsPositive,
   IsString,
+  IsUUID,
   Min,
 } from 'class-validator';
 
 export class CreateProductDto {
+  userId: string;
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -17,7 +20,17 @@ export class CreateProductDto {
   @Min(0)
   @IsNumber()
   @IsNotEmpty()
-  quantity: number;
+  currentQuantity: number;
+
+  @Min(0)
+  @IsNumber()
+  @IsNotEmpty()
+  quantityIn: number;
+
+  @Min(0)
+  @IsNumber()
+  @IsNotEmpty()
+  quantityOut: number;
 
   @Min(0)
   @IsNumber()
@@ -26,11 +39,21 @@ export class CreateProductDto {
 
   @IsString()
   @IsNotEmpty()
-  purchasePrice: string;
-
-  @IsString()
-  @IsNotEmpty()
-  salePrice: string;
+  price: string;
 }
 
-export class UpdateProductDto extends CreateProductDto {}
+export class UpdateProductDto extends OmitType(CreateProductDto, [
+  'minStock',
+  'quantityIn',
+  'quantityOut',
+]) {}
+
+export class AddProductDto {
+  @IsUUID()
+  productId: string;
+
+  @IsNumber()
+  quantity: number;
+}
+
+export class SubtractProductDto extends AddProductDto {}
