@@ -13,4 +13,10 @@ export class ProductService {
   async update(id: string, product: UpdateProductDto) {
     await this.repository.update(id, product);
   }
+
+  async findAll() {
+    const result = await this.repository.findAll();
+
+    return result;
+  }
 }

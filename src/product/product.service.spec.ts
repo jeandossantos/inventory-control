@@ -1,4 +1,3 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/product.dto';
 import { randomUUID } from 'crypto';
@@ -23,10 +22,11 @@ describe('ProductService', () => {
       const repositoryMock: ProductRepository = {
         create: jest.fn(),
         update: jest.fn(),
+        findAll: jest.fn(),
       };
 
       const service: ProductService = new ProductService(repositoryMock);
-      const result = await service.create(productMock);
+      await service.create(productMock);
 
       expect(repositoryMock.create).toHaveBeenCalled();
     });
@@ -39,12 +39,36 @@ describe('ProductService', () => {
       const repositoryMock = {
         create: jest.fn(),
         update: jest.fn().mockResolvedValue({ id: ID, ...productMock }),
+        findAll: jest.fn(),
       };
 
       const service: ProductService = new ProductService(repositoryMock);
-      const result = await service.update(ID, productMock);
+      await service.update(ID, productMock);
 
       expect(repositoryMock.update).toHaveBeenCalled();
+    });
+  });
+
+  describe('#findAllProducts paginated', () => {
+    test('should find products', async () => {
+      const repositoryMock = {
+        create: jest.fn(),
+        update: jest.fn(),
+        findAll: jest.fn().mockResolvedValue({
+          data: [],
+          count: 50,
+          limit: 10,
+        }),
+      };
+
+      const service: ProductService = new ProductService(repositoryMock);
+      const result = await service.findAll();
+
+      expect(result).toHaveProperty('data');
+      expect(result).toHaveProperty('count');
+      expect(result).toHaveProperty('limit');
+
+      expect(repositoryMock.findAll).toHaveBeenCalled();
     });
   });
 });

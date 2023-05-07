@@ -5,4 +5,5 @@ import type { CreateProductDto, UpdateProductDto } from './dto/product.dto';
 export class ProductRepository {
   async create(product: CreateProductDto) {}
   async update(id: string, product: UpdateProductDto) {}
+  async findAll() {}
 }
