@@ -6,7 +6,7 @@ import type {
   CreateProductDto,
   SubtractProductDto,
   UpdateProductDto,
-} from './dto/product.dto';
+} from './types/dto/product.dto';
 import type { MovementRepository } from 'src/movement/movement.repository';
 import { generateUniqueCode } from '../utils/generateUniqueCode';
 

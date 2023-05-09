@@ -1,5 +1,5 @@
 import { ProductService } from './product.service';
-import { CreateProductDto } from './dto/product.dto';
+import { CreateProductDto } from './types/dto/product.dto';
 import { randomUUID } from 'crypto';
 import type { ProductRepository } from './product.repository';
 import { MovementRepository } from 'src/movement/movement.repository';

@@ -1,24 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import type {
-  AddProductDto,
-  CreateProductDto,
-  SubtractProductDto,
-  UpdateProductDto,
-} from './dto/product.dto';
-
-export interface CreateProductData extends CreateProductDto {
-  code: string;
-}
+import {
+  AddProductData,
+  CreateProductData,
+  IProduct,
+  SubtractProductData,
+} from './types/product.interface';
 
 interface IProductRepository {
-  create(
-    product: CreateProductData,
-  ): Promise<CreateProductDto & { id: string }>;
-  update(id: string, product: UpdateProductDto): Promise<void>;
+  create(product: CreateProductData): Promise<IProduct>;
+  update(id: string, product: IProduct): Promise<void>;
   findAll(search: string, page: number): Promise<PaginatedProduct[]>;
-  findByCode(code: string): Promise<CreateProductData & { code: string }>;
-  addProduct(product: AddProductDto): Promise<void>;
-  subtractProduct(product: SubtractProductDto): Promise<void>;
+  findByCode(code: string): Promise<IProduct>;
+  addProduct(product: AddProductData): Promise<void>;
+  subtractProduct(product: SubtractProductData): Promise<void>;
 }
 
 export interface PaginatedProduct {
@@ -29,24 +23,22 @@ export interface PaginatedProduct {
 
 @Injectable()
 export class ProductRepository implements IProductRepository {
-  addProduct(product: AddProductDto): Promise<void> {
+  create(product: CreateProductData): Promise<IProduct> {
     throw new Error('Method not implemented.');
   }
-  subtractProduct(product: SubtractProductDto): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  findByCode(code: string): Promise<CreateProductData & { code: string }> {
-    throw new Error('Method not implemented.');
-  }
-  create(
-    product: CreateProductData,
-  ): Promise<CreateProductDto & { id: string }> {
-    throw new Error('Method not implemented.');
-  }
-  update(id: string, product: UpdateProductDto): Promise<void> {
+  update(id: string, product: IProduct): Promise<void> {
     throw new Error('Method not implemented.');
   }
   findAll(search: string, page: number): Promise<PaginatedProduct[]> {
+    throw new Error('Method not implemented.');
+  }
+  findByCode(code: string): Promise<IProduct> {
+    throw new Error('Method not implemented.');
+  }
+  addProduct(product: AddProductData): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  subtractProduct(product: SubtractProductData): Promise<void> {
     throw new Error('Method not implemented.');
   }
 }
