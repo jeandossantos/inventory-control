@@ -1,0 +1,1 @@
+export const SECRET = '2178943b5bcb934c4b7b4f176743130';
