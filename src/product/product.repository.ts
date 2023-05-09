@@ -5,10 +5,11 @@ import {
   IProduct,
   SubtractProductData,
 } from './types/product.interface';
+import { UpdateProductDto } from './types/dtos/productDto';
 
 interface IProductRepository {
   create(product: CreateProductData): Promise<IProduct>;
-  update(id: string, product: IProduct): Promise<void>;
+  update(id: string, product: UpdateProductDto): Promise<void>;
   findAll(search: string, page: number): Promise<PaginatedProduct[]>;
   findByCode(code: string): Promise<IProduct>;
   addProduct(product: AddProductData): Promise<void>;
@@ -23,12 +24,13 @@ export interface PaginatedProduct {
 
 @Injectable()
 export class ProductRepository implements IProductRepository {
+  update(id: string, product: UpdateProductDto): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
   create(product: CreateProductData): Promise<IProduct> {
     throw new Error('Method not implemented.');
   }
-  update(id: string, product: IProduct): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
+
   findAll(search: string, page: number): Promise<PaginatedProduct[]> {
     throw new Error('Method not implemented.');
   }
