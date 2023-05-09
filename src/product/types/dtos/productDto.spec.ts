@@ -1,5 +1,5 @@
 import { validate } from 'class-validator';
-import { CreateProductDto, AddProductDto } from './product.dto';
+import { CreateProductDto, AddProductDto } from './productDto';
 
 describe('ProductDto', () => {
   let createProductDto: CreateProductDto;
