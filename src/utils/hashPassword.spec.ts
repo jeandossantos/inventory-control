@@ -1,5 +1,5 @@
 import { hashPassword } from './hashPassword';
-import * as bcrypt from 'bcryptjs';
+import * as bcrypt from 'bcrypt';
 
 jest.mock('bcryptjs', () => ({
   genSalt: jest.fn(() => 'salt'),
