@@ -17,14 +17,14 @@ describe('UserController (e2e)', () => {
     await app.init();
   });
 
-  beforeAll(async () => {
-    const prisma = new PrismaService();
+  const prisma = new PrismaService();
 
-    await prisma.user.delete({
-      where: {
-        email: userMock.email,
-      },
-    });
+  afterEach(async () => {
+    await prisma.user.deleteMany();
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
   });
 
   const userMock: CreateUserDto = {
@@ -35,11 +35,41 @@ describe('UserController (e2e)', () => {
     isAdmin: false,
   };
 
-  it('/users (POST)', () => {
-    return request(app.getHttpServer())
-      .post('/users')
-      .send(userMock)
-      .expect(201)
-      .expect('');
+  describe('/users (POST)', () => {
+    test('should return 400 if passwords does not match!', async () => {
+      let response = await request(app.getHttpServer())
+        .post('/users')
+        .send({ ...userMock, confirmedPassword: 'password-not-match' });
+
+      expect(response.statusCode).toBe(400);
+      expect(response.body.message).toBe('Passwords does not match!');
+    });
+
+    test('should create a user successfully or return 400 if already exists ', async () => {
+      let response = await request(app.getHttpServer())
+        .post('/users')
+        .send(userMock);
+
+      expect(response.statusCode).toBe(201);
+      expect(response.text).toBe('');
+
+      response = await request(app.getHttpServer())
+        .post('/users')
+        .send(userMock);
+
+      expect(response.statusCode).toBe(400);
+      expect(response.body.message).toBe('User already exists!');
+    });
+  });
+
+  describe('/users/:id (PUT)', () => {
+    test('should return 400 if user does not exists!', async () => {
+      let response = await request(app.getHttpServer())
+        .put(`/users/7d5c68f8-7d09-4e12-83f5-3b5e7c5d5d5f`)
+        .send({ ...userMock, email: 'email-does-not-exists@email.com' });
+
+      expect(response.statusCode).toBe(400);
+      expect(response.body.message).toBe('User not found!');
+    });
   });
 });
