@@ -1,28 +1,17 @@
 import { Injectable } from '@nestjs/common';
 
-import type { ProductRepository } from './product.repository';
+import { AbstractProductRepository } from './product.repository';
 import type {
   AddProductDto,
   CreateProductDto,
   SubtractProductDto,
   UpdateProductDto,
 } from './types/dtos/productDto';
-import type { MovementRepository } from 'src/movement/movement.repository';
 import { generateUniqueCode } from '../utils/generateUniqueCode';
-
-interface RecordMovementProps {
-  productId: string;
-  quantity: number;
-  unitPrice: string;
-  userId: string;
-}
 
 @Injectable()
 export class ProductService {
-  constructor(
-    private readonly repository: ProductRepository,
-    private readonly movementRepository: MovementRepository,
-  ) {}
+  constructor(private readonly repository: AbstractProductRepository) {}
 
   async create(product: CreateProductDto) {
     const code = generateUniqueCode();
@@ -30,13 +19,6 @@ export class ProductService {
       ...product,
       code,
     });
-
-    // await this.recordEntryMovement({
-    //   quantity: result.currentQuantity,
-    //   userId: result.userId,
-    //   productId: result.id,
-    //   unitPrice: result.price,
-    // });
   }
 
   async update(id: string, product: UpdateProductDto) {

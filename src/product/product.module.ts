@@ -1,12 +1,20 @@
 import { Module } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ProductController } from './product.controller';
-import { ProductRepository } from './product.repository';
-import { MovementModule } from 'src/movement/movement.module';
+import {
+  AbstractProductRepository,
+  ProductRepository,
+} from './product.repository';
 
 @Module({
-  imports: [MovementModule],
+  imports: [],
   controllers: [ProductController],
-  providers: [ProductService, ProductRepository],
+  providers: [
+    ProductService,
+    {
+      provide: AbstractProductRepository,
+      useClass: ProductRepository,
+    },
+  ],
 })
 export class ProductModule {}
