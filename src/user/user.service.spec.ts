@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import UserRepository from './user.repository';
+import { AbstractUserRepository } from './user.repository';
 import { UserService } from './user.service';
 import * as isEqualModule from '../utils/isEqual';
 import * as hashPasswordModule from '../utils/hashPassword';
@@ -19,7 +19,7 @@ describe('#UserService', () => {
     isAdmin: true,
   };
 
-  const userRepositoryMock: UserRepository = {
+  const userRepositoryMock: AbstractUserRepository = {
     create: jest.fn(),
     getByEmail: jest.fn(),
     getById: jest.fn(),

@@ -1,15 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
-import type UserRepository from './user.repository';
 import type { CreateUserDto } from './types/dtos/createUserDto';
 import type { UpdateUserDto } from './types/dtos/updateUserDto';
 
 import { isEqual } from '../utils/isEqual';
 import { hashPassword } from '../utils/hashPassword';
+import { AbstractUserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly repository: UserRepository) {}
+  constructor(private readonly repository: AbstractUserRepository) {}
 
   async create(dto: CreateUserDto) {
     if (!isEqual(dto.password, dto.confirmedPassword)) {
@@ -23,6 +23,8 @@ export class UserService {
     }
 
     dto.password = await hashPassword(dto.password);
+
+    delete dto.confirmedPassword;
 
     await this.repository.create(dto);
   }
