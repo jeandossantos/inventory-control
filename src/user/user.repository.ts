@@ -26,8 +26,16 @@ export default class UserRepository extends AbstractUserRepository {
   getAll(data: getUsersData): Promise<PaginatedUser[]> {
     throw new Error('Method not implemented.');
   }
-  softDelete(id: string): Promise<void> {
-    throw new Error('Method not implemented.');
+
+  async softDelete(id: string): Promise<void> {
+    await this.prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
   }
 
   async update(id: string, user: UpdateUserData): Promise<void> {
