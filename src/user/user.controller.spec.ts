@@ -55,6 +55,20 @@ describe('UserController (e2e)', () => {
     return newUser;
   }
 
+  async function getUserById(id: string) {
+    const prisma = new PrismaService();
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    await prisma.$disconnect();
+
+    return user;
+  }
+
   describe('/users (POST)', () => {
     test('should return 400 if passwords does not match!', async () => {
       let response = await request(app.getHttpServer())
@@ -105,6 +119,45 @@ describe('UserController (e2e)', () => {
         .send({ email: 'updated-user@example.com', name: 'updated name' });
 
       expect(response.statusCode).toBe(200);
+    });
+  });
+
+  describe('/users/:id (DELETE)', () => {
+    it('should delete a user successfully', async () => {
+      const userIdToDelete = await createUser({
+        ...userMock,
+        email: 'user-to-delete@example.com',
+      });
+
+      await request(app.getHttpServer())
+        .delete(`/users/${userIdToDelete.id}`)
+        .expect(200);
+
+      const deletedUser = await getUserById(userIdToDelete.id);
+
+      expect(deletedUser.deletedAt).toBeTruthy();
+    });
+
+    it('should return a 400 error if user not found', async () => {
+      const userIdToDelete = '506a48f9-1c68-4d9a-a5c5-8f7b0c5f41e7';
+
+      const res = await request(app.getHttpServer())
+        .delete(`/users/${userIdToDelete}`)
+        .expect(400);
+
+      expect(res.body.message).toEqual('User not found!');
+    });
+  });
+
+  describe('/users (GET)', () => {
+    test('should return all users', async () => {
+      const res = await request(app.getHttpServer())
+        .get(`/users/?page=1&search=user`)
+        .expect(200);
+
+      expect(res.body).toHaveProperty('data');
+      expect(res.body).toHaveProperty('count');
+      expect(res.body).toHaveProperty('limit');
     });
   });
 });

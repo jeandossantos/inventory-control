@@ -1,7 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
+  Get,
   Param,
+  ParseIntPipe,
   ParseUUIDPipe,
   Post,
   Put,
@@ -25,5 +28,18 @@ export class UserController {
     @Body() dto: UpdateUserDto,
   ) {
     await this.userService.update(id, dto);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.userService.delete(id);
+  }
+
+  @Get()
+  async getAll(
+    @Param('page', ParseIntPipe) page: number,
+    @Param('search') search: string,
+  ) {
+    return await this.userService.getAll(search, page);
   }
 }
