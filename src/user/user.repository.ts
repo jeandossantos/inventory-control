@@ -14,7 +14,7 @@ export abstract class AbstractUserRepository {
   abstract create(user: CreateUserData): Promise<void>;
   abstract update(id: string, user: UpdateUserData): Promise<void>;
   abstract softDelete(id: string): Promise<void>;
-  abstract getAll(data: getUsersData): Promise<PaginatedUser[]>;
+  abstract getAll(data: getUsersData): Promise<PaginatedUser>;
 }
 
 @Injectable()
@@ -23,8 +23,36 @@ export default class UserRepository extends AbstractUserRepository {
     super();
   }
 
-  getAll(data: getUsersData): Promise<PaginatedUser[]> {
-    throw new Error('Method not implemented.');
+  async getAll(data: getUsersData): Promise<PaginatedUser> {
+    const { search, page } = data;
+    const take = 10;
+    const skip = (page - 1) * take;
+
+    const count = await this.prisma.user.count({
+      where: {
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { email: { contains: search, mode: 'insensitive' } },
+        ],
+      },
+    });
+
+    const users = await this.prisma.user.findMany({
+      where: {
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { email: { contains: search, mode: 'insensitive' } },
+        ],
+      },
+      take,
+      skip,
+    });
+
+    return {
+      data: users,
+      count,
+      limit: take,
+    };
   }
 
   async softDelete(id: string): Promise<void> {
