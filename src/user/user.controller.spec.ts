@@ -9,6 +9,7 @@ import { hashPassword } from '../utils/hashPassword';
 
 describe('UserController (e2e)', () => {
   let app: INestApplication;
+  let prismaService: PrismaService;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -16,17 +17,14 @@ describe('UserController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    prismaService = app.get<PrismaService>(PrismaService);
+
     await app.init();
   });
 
-  const prisma = new PrismaService();
-
-  afterEach(async () => {
-    await prisma.user.deleteMany();
-  });
-
   afterAll(async () => {
-    await prisma.$disconnect();
+    await prismaService.user.deleteMany();
+    await prismaService.$disconnect();
   });
 
   const userMock: CreateUserDto = {
@@ -39,7 +37,7 @@ describe('UserController (e2e)', () => {
 
   async function createUser(user: CreateUserData) {
     const { name, email, password, isAdmin } = user;
-    const prisma = new PrismaService();
+    const prisma = prismaService;
 
     const newUser = await prisma.user.create({
       data: {
@@ -56,7 +54,7 @@ describe('UserController (e2e)', () => {
   }
 
   async function getUserById(id: string) {
-    const prisma = new PrismaService();
+    const prisma = prismaService;
 
     const user = await prisma.user.findUnique({
       where: {

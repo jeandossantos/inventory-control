@@ -8,10 +8,10 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './types/dtos/createUserDto';
-import { UpdateProductDto } from 'src/product/types/dtos/productDto';
 import { UpdateUserDto } from './types/dtos/updateUserDto';
 
 @Controller('users')
@@ -37,8 +37,8 @@ export class UserController {
 
   @Get()
   async getAll(
-    @Param('page', ParseIntPipe) page: number,
-    @Param('search') search: string,
+    @Query('page', ParseIntPipe) page: number = 1,
+    @Query('search') search: string = '',
   ) {
     return await this.userService.getAll(search, page);
   }
