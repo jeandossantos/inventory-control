@@ -37,7 +37,7 @@ export class UserService {
     await this.repository.update(id, dto);
   }
 
-  async softDelete(id: string) {
+  async delete(id: string) {
     const userExists = !!(await this.repository.getById(id));
 
     if (!userExists) {

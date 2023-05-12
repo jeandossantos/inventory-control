@@ -109,7 +109,7 @@ describe('#UserService', () => {
 
       const service = new UserService(userRepositoryMock);
 
-      await expect(service.softDelete('some-uuid')).rejects.toThrow(
+      await expect(service.delete('some-uuid')).rejects.toThrow(
         new BadRequestException('User not found!'),
       );
 
@@ -121,7 +121,7 @@ describe('#UserService', () => {
       userRepositoryMock.getById = jest.fn().mockReturnValue({});
 
       const service = new UserService(userRepositoryMock);
-      await service.softDelete('some-uuid');
+      await service.delete('some-uuid');
 
       expect(userRepositoryMock.getById).toHaveBeenCalled();
       expect(userRepositoryMock.softDelete).toHaveBeenCalled();
