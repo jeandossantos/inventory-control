@@ -41,8 +41,12 @@ export default class UserRepository extends AbstractUserRepository {
     });
   }
 
-  getById(id: string): Promise<IUser> {
-    throw new Error('Method not implemented.');
+  async getById(id: string): Promise<IUser> {
+    return await this.prisma.user.findFirst({
+      where: {
+        id,
+      },
+    });
   }
 
   async getByEmail(email: string): Promise<IUser> {
