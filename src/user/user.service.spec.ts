@@ -135,7 +135,7 @@ describe('#UserService', () => {
         .mockResolvedValue({ data: [userMock], count: 1, limit: 10 });
 
       const service = new UserService(userRepositoryMock);
-      const result = await service.getAll();
+      const result = await service.getAll('', 1);
 
       expect(userRepositoryMock.getAll).toHaveBeenCalled();
       expect(result).toHaveProperty('data');

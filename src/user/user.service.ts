@@ -47,8 +47,11 @@ export class UserService {
     await this.repository.softDelete(id);
   }
 
-  async getAll() {
-    const result = await this.repository.getAll();
+  async getAll(search: string, page: number) {
+    const result = await this.repository.getAll({
+      search,
+      page,
+    });
 
     return result;
   }

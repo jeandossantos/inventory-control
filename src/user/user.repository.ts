@@ -4,6 +4,7 @@ import {
   IUser,
   PaginatedUser,
   UpdateUserData,
+  getUsersData,
 } from './types/user.interface';
 
 interface IUserRepository {
@@ -12,12 +13,12 @@ interface IUserRepository {
   create(user: CreateUserData): Promise<void>;
   update(id: string, user: UpdateUserData): Promise<void>;
   softDelete(id: string): Promise<void>;
-  getAll(): Promise<PaginatedUser[]>;
+  getAll(data: getUsersData): Promise<PaginatedUser[]>;
 }
 
 @Injectable()
 export default class UserRepository implements IUserRepository {
-  getAll(): Promise<PaginatedUser[]> {
+  getAll(data: getUsersData): Promise<PaginatedUser[]> {
     throw new Error('Method not implemented.');
   }
   softDelete(id: string): Promise<void> {

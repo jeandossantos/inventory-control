@@ -18,6 +18,11 @@ export interface UpdateUserData {
   email: string;
 }
 
+export interface getUsersData {
+  search: string;
+  page: number;
+}
+
 export interface PaginatedUser {
   data: Partial<IUser>;
   count: number;
