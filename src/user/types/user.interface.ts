@@ -25,7 +25,7 @@ export interface getUsersData {
 }
 
 export interface PaginatedUser {
-  data: Partial<IUser>;
+  data: Partial<IUser[]>;
   count: number;
   limit: number;
 }
