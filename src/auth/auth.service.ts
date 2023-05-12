@@ -3,20 +3,21 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import type UserRepository from 'src/user/user.repository';
+
 import type { AuthDto } from './types/dtos/authDto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { AbstractUserRepository } from '../user/user.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepository: UserRepository,
+    private readonly repository: AbstractUserRepository,
     private readonly jwtService: JwtService,
   ) {}
 
   async authenticate(dto: AuthDto) {
-    const userExists = await this.userRepository.getByEmail(dto.email);
+    const userExists = await this.repository.getByEmail(dto.email);
 
     if (!userExists) {
       throw new UnauthorizedException('E-mail/Password invalid(s)!');

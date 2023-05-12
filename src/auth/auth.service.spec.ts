@@ -1,8 +1,8 @@
 import { SECRET } from './../utils/constants';
-import UserRepository from 'src/user/user.repository';
+import { AbstractUserRepository } from '../user/user.repository';
 import { AuthService } from './auth.service';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
-import * as hashPasswordModule from '../utils/hashPassword';
+import { UnauthorizedException } from '@nestjs/common';
+
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
@@ -12,7 +12,7 @@ describe('AuthService', () => {
     password: 'test123456',
   };
 
-  const userRepositoryMock: UserRepository = {
+  const userRepositoryMock: AbstractUserRepository = {
     create: jest.fn(),
     getByEmail: jest.fn(),
     getById: jest.fn(),

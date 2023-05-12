@@ -6,6 +6,5 @@ import { MovementRepository } from './movement.repository';
 @Module({
   controllers: [MovementController],
   providers: [MovementService, MovementRepository],
-  exports: [MovementRepository],
 })
 export class MovementModule {}
