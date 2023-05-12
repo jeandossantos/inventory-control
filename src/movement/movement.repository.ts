@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import {
+  PaginatedMovement,
+  getMovementsData,
+} from './types/movement.interface';
 
-interface ICreateMovement {
-  productId: string;
-  userId: string;
-  quantity: number;
-  unitPrice: string;
-  type: 'in' | 'out';
+interface IMovementRepository {
+  getAll(data: getMovementsData): Promise<PaginatedMovement>;
 }
 
 @Injectable()
-export class MovementRepository {
-  async create(movement: ICreateMovement) {}
+export class MovementRepository implements IMovementRepository {
+  getAll(data: getMovementsData): Promise<PaginatedMovement> {
+    throw new Error('Method not implemented.');
+  }
 }
