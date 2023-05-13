@@ -12,7 +12,7 @@ import UserRepository, {
     JwtModule.register({
       global: true,
       secret: SECRET,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '1d' },
     }),
   ],
   controllers: [AuthController],

@@ -29,7 +29,7 @@ export class AuthService {
       throw new UnauthorizedException('E-mail/Password invalid(s)!');
     }
 
-    const { name, email, id } = userExists;
+    const { name, email, id, isAdmin } = userExists;
     const payload = {
       sub: id,
       email,
@@ -38,6 +38,7 @@ export class AuthService {
       id,
       name,
       email,
+      isAdmin,
       access_token: await this.jwtService.signAsync(payload),
     };
   }
