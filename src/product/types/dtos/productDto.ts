@@ -20,17 +20,7 @@ export class CreateProductDto {
   @Min(0)
   @IsNumber()
   @IsNotEmpty()
-  currentQuantity: number;
-
-  @Min(0)
-  @IsNumber()
-  @IsNotEmpty()
-  quantityIn: number;
-
-  @Min(0)
-  @IsNumber()
-  @IsNotEmpty()
-  quantityOut: number;
+  quantity: number;
 
   @Min(0)
   @IsNumber()
@@ -44,8 +34,7 @@ export class CreateProductDto {
 
 export class UpdateProductDto extends OmitType(CreateProductDto, [
   'minStock',
-  'quantityIn',
-  'quantityOut',
+  'quantity',
 ]) {}
 
 export class AddProductDto {

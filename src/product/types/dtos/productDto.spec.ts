@@ -9,10 +9,8 @@ describe('ProductDto', () => {
       createProductDto = new CreateProductDto();
       createProductDto.name = 'Product';
       createProductDto.description = 'Product description';
-      createProductDto.currentQuantity = 50;
-      createProductDto.quantityIn = 100;
-      createProductDto.quantityOut = 50;
       createProductDto.minStock = 5;
+      createProductDto.quantity = 100;
       createProductDto.price = '10.50';
     });
 
@@ -33,17 +31,17 @@ describe('ProductDto', () => {
       expect(errors.length).toBe(0);
     });
 
-    it('should fail validation if currentQuantity is empty, not number or less than 0', async () => {
-      createProductDto.currentQuantity = undefined;
+    it('should fail validation if quantity is empty, not number or less than 0', async () => {
+      createProductDto.quantity = undefined;
 
       const errors = await validate(createProductDto);
       expect(errors.length).toBe(1);
 
       expect(errors[0].constraints).toMatchObject({
-        isNotEmpty: 'currentQuantity should not be empty',
+        isNotEmpty: 'quantity should not be empty',
         isNumber:
-          'currentQuantity must be a number conforming to the specified constraints',
-        min: 'currentQuantity must not be less than 0',
+          'quantity must be a number conforming to the specified constraints',
+        min: 'quantity must not be less than 0',
       });
     });
 
@@ -61,20 +59,6 @@ describe('ProductDto', () => {
       });
     });
 
-    it('should fail validation if quantityIn is empty, not number or less than 0', async () => {
-      createProductDto.quantityIn = undefined;
-
-      const errors = await validate(createProductDto);
-      expect(errors.length).toBe(1);
-
-      expect(errors[0].constraints).toMatchObject({
-        isNotEmpty: 'quantityIn should not be empty',
-        isNumber:
-          'quantityIn must be a number conforming to the specified constraints',
-        min: 'quantityIn must not be less than 0',
-      });
-    });
-
     it('should fail validation if price is empty', async () => {
       createProductDto.price = '';
 
@@ -82,20 +66,6 @@ describe('ProductDto', () => {
       expect(errors.length).toBe(1);
       expect(errors[0].constraints).toMatchObject({
         isNotEmpty: 'price should not be empty',
-      });
-    });
-
-    it('should fail validation if quantityOut is empty, not number or less than 0', async () => {
-      createProductDto.quantityOut = undefined;
-
-      const errors = await validate(createProductDto);
-      expect(errors.length).toBe(1);
-
-      expect(errors[0].constraints).toMatchObject({
-        isNotEmpty: 'quantityOut should not be empty',
-        isNumber:
-          'quantityOut must be a number conforming to the specified constraints',
-        min: 'quantityOut must not be less than 0',
       });
     });
 

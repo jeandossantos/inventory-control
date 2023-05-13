@@ -14,9 +14,7 @@ export interface CreateProductData {
   code: string;
   name: string;
   description?: string;
-  currentQuantity: number;
-  quantityIn: number;
-  quantityOut: number;
+  quantity: number;
   minStock: number;
   price: string;
   userId: string;
