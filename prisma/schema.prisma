@@ -11,12 +11,43 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
+  id        String     @id @default(uuid())
   name      String
-  email     String    @unique()
+  email     String     @unique()
   password  String
-  isAdmin   Boolean   @default(false)
+  isAdmin   Boolean    @default(false)
   deletedAt DateTime?
+  Movement  Movement[]
 
   @@map("users")
+}
+
+model Product {
+  id              String     @id @default(uuid())
+  code            String
+  name            String
+  description     String?
+  currentQuantity Int
+  quantityIn      Int
+  quantityOut     Int        @default(0)
+  minStock        Int
+  price           String
+  Movement        Movement[]
+
+  @@map("products")
+}
+
+model Movement {
+  id        String   @id @default(uuid())
+  moment    DateTime
+  unitPrice String
+  quantity  Int
+  productId String
+  type      String
+  userId    String?
+
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: SetNull)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("movements")
 }
