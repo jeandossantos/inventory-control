@@ -12,9 +12,6 @@ describe('ProductService', () => {
   const productMock = new CreateProductDto();
   productMock.name = 'Product';
   productMock.description = 'Product description';
-  productMock.currentQuantity = 50;
-  productMock.quantityIn = 100;
-  productMock.quantityOut = 50;
   productMock.minStock = 5;
   productMock.price = '10.50';
 
