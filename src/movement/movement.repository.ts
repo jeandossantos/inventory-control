@@ -28,8 +28,8 @@ export class MovementRepository extends IMovementRepository {
     if (from && to) {
       where = {
         moment: {
-          gte: from,
-          lte: to,
+          gte: new Date(from),
+          lte: new Date(to),
         },
       };
     }
