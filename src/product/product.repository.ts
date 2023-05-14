@@ -62,12 +62,6 @@ export class ProductRepository extends AbstractProductRepository {
   async findAll(search: string, page: number): Promise<PaginatedProduct> {
     const limit = 10;
     const skip = (page - 1) * limit;
-    const where = {
-      OR: [
-        { name: { contains: search, mode: 'insensitive' } },
-        { code: { contains: search, mode: 'insensitive' } },
-      ],
-    };
 
     const count = await this.prisma.product.count({
       where: {
