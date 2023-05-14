@@ -1,7 +1,5 @@
-import { hashPassword } from '../utils/hashPassword';
-import { PrismaService } from './prisma.service';
-
-const prisma = new PrismaService();
+import { hashPassword } from '../../utils/hashPassword';
+import { PrismaService } from '../prisma.service';
 
 const users = [
   {
@@ -31,23 +29,10 @@ const users = [
   // add more users as needed
 ];
 
-async function seedUsers() {
+export async function seedUsers(prisma: PrismaService) {
   for (const user of users) {
     await prisma.user.create({
       data: { ...user, password: await hashPassword('password123') },
     });
   }
 }
-
-async function seedDatabase() {
-  try {
-    await seedUsers();
-    console.log('Database seeded successfully.');
-  } catch (error) {
-    console.error('Error seeding database:', error);
-  } finally {
-    await prisma.$disconnect();
-  }
-}
-
-seedDatabase();
