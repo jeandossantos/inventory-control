@@ -9,9 +9,11 @@ import {
   Post,
   Put,
   Query,
+  Req,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto, UpdateProductDto } from './types/dtos/productDto';
+import { Request } from 'express';
 
 @Controller('products')
 export class ProductController {
@@ -38,8 +40,27 @@ export class ProductController {
     return this.productService.findAll(search, page);
   }
 
-  @Patch()
-  async addProduct(@Body() data, @Param('id', ParseUUIDPipe) id: string) {
-    await this.productService.addProduct(id, data.quantity);
+  @Patch('/in/:id')
+  async addProduct(
+    @Req() req: Request,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    await this.productService.addProduct({
+      productId: id,
+      userId: req.user.id,
+      quantity: req.body.quantity,
+    });
+  }
+
+  @Patch('/out/:id')
+  async subtractProduct(
+    @Req() req: Request,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    await this.productService.subtractProduct({
+      productId: id,
+      userId: req.user.id,
+      quantity: req.body.quantity,
+    });
   }
 }

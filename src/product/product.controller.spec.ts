@@ -118,16 +118,50 @@ describe('ProductController (e2e)', () => {
   describe('/products/in/:id (PATCH)', () => {
     test('should return 401 if user is not logged in', async () => {
       const response = await request(app.getHttpServer())
-        .get(`/products/in/${productToBeEdited.id}`)
+        .patch(`/products/in/${productToBeEdited.id}`)
         .send({ quantity: 50 });
 
       expect(response.status).toBe(401);
     });
-    test.todo('should return 200');
+
+    test('should return 200', async () => {
+      const response = await request(app.getHttpServer())
+        .patch(`/products/in/${productToBeEdited.id}`)
+        .set('Authorization', authToken)
+        .send({ quantity: 50 });
+
+      expect(response.status).toBe(200);
+
+      const { currentQuantity } = await prismaService.product.findUnique({
+        where: { id: productToBeEdited.id },
+      });
+
+      expect(currentQuantity).toBe(100);
+    });
   });
 
   describe('/products/out/:id  (PATCH)', () => {
-    test.todo('should return 401 if user is not logged in');
-    test.todo('should return 200');
+    test('should return 401 if user is not logged in', async () => {
+      const response = await request(app.getHttpServer())
+        .patch(`/products/out/${productToBeEdited.id}`)
+        .send({ quantity: 50 });
+
+      expect(response.status).toBe(401);
+    });
+
+    test('should return 200', async () => {
+      const response = await request(app.getHttpServer())
+        .patch(`/products/out/${productToBeEdited.id}`)
+        .set('Authorization', authToken)
+        .send({ quantity: 20 });
+
+      expect(response.status).toBe(200);
+
+      const { currentQuantity } = await prismaService.product.findUnique({
+        where: { id: productToBeEdited.id },
+      });
+
+      expect(currentQuantity).toBe(80);
+    });
   });
 });
