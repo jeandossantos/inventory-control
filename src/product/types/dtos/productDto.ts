@@ -36,13 +36,3 @@ export class UpdateProductDto extends OmitType(CreateProductDto, [
   'minStock',
   'quantity',
 ]) {}
-
-export class AddProductDto {
-  @IsUUID()
-  productId: string;
-
-  @IsNumber()
-  quantity: number;
-}
-
-export class SubtractProductDto extends AddProductDto {}

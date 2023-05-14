@@ -1,5 +1,5 @@
 import { validate } from 'class-validator';
-import { CreateProductDto, AddProductDto } from './productDto';
+import { CreateProductDto } from './productDto';
 
 describe('ProductDto', () => {
   let createProductDto: CreateProductDto;
@@ -72,34 +72,6 @@ describe('ProductDto', () => {
     it('should pass with a valid product', async () => {
       const errors = await validate(createProductDto);
       expect(errors.length).toBe(0);
-    });
-  });
-
-  describe('AddProductDto', () => {
-    it('should validate the AddProductDto class', async () => {
-      // Create an instance of the AddProductDto class with valid data
-      const addProductDto = new AddProductDto();
-      addProductDto.productId = '0f84fbf8-27d9-4ea3-b3cc-12ec32c5e34f';
-      addProductDto.quantity = 5;
-
-      // Validate the AddProductDto instance
-      const errors = await validate(addProductDto);
-
-      // Assert that there are no errors
-      expect(errors.length).toBe(0);
-    });
-
-    it('should not validate the AddProductDto class with invalid data', async () => {
-      // Create an instance of the AddProductDto class with invalid data
-      const addProductDto = new AddProductDto();
-      addProductDto.productId = 'invalid_uuid';
-      addProductDto.quantity = null;
-
-      // Validate the AddProductDto instance
-      const errors = await validate(addProductDto);
-
-      // Assert that there are errors
-      expect(errors.length).toBeGreaterThan(0);
     });
   });
 });
