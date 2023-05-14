@@ -19,8 +19,8 @@ export class MovementService {
 
     const { data, count, limit } = await this.repository.getAll({
       ...dto,
-      from: new Date(dto.from),
-      to: new Date(dto.to),
+      from: dto.from ? new Date(dto.from) : null,
+      to: dto.to ? new Date(dto.to) : null,
     });
 
     return {
