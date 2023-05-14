@@ -95,8 +95,37 @@ export class ProductRepository extends AbstractProductRepository {
     throw new Error('Method not implemented.');
   }
 
-  async addProduct(product: AddProductData): Promise<void> {
-    throw new Error('Method not implemented.');
+  async addProduct({
+    productId,
+    quantity,
+    userId,
+  }: AddProductData): Promise<void> {
+    const productDB = await this.prisma.product.findUnique({
+      where: { id: productId },
+    });
+
+    await this.prisma.$transaction(async (prisma) => {
+      const p1 = await prisma.product.update({
+        where: {
+          id: productId,
+        },
+        data: {
+          currentQuantity: productDB.currentQuantity + quantity,
+          quantityIn: productDB.quantityIn + quantity,
+        },
+      });
+
+      await prisma.movement.create({
+        data: {
+          moment: new Date(),
+          quantity,
+          type: 'in',
+          unitPrice: productDB.price,
+          productId,
+          userId,
+        },
+      });
+    });
   }
 
   async subtractProduct(product: SubtractProductData): Promise<void> {
