@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { AbstractProductRepository } from './product.repository';
 import type {
+  AddProductDto,
   CreateProductDto,
   UpdateProductDto,
 } from './types/dtos/productDto';
@@ -35,11 +36,11 @@ export class ProductService {
     return product;
   }
 
-  async addProduct(id: string, quantity: number) {
-    await this.repository.addProduct({ productId: id, quantity });
+  async addProduct(dto: AddProductDto) {
+    await this.repository.addProduct(dto);
   }
 
-  async subtractProduct(id: string, quantity: number) {
-    await this.repository.subtractProduct({ productId: id, quantity });
+  async subtractProduct(dto: AddProductDto) {
+    await this.repository.subtractProduct(dto);
   }
 }

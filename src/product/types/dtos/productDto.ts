@@ -36,3 +36,11 @@ export class UpdateProductDto extends OmitType(CreateProductDto, [
   'minStock',
   'quantity',
 ]) {}
+
+export class AddProductDto {
+  productId: string;
+  userId: string;
+  quantity: number;
+}
+
+export class SubtractProductDataDto extends AddProductDto {}

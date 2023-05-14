@@ -31,6 +31,7 @@ export interface UpdateProductData {
 export interface AddProductData {
   productId: string;
   quantity: number;
+  userId: string;
 }
 
 export interface SubtractProductData extends AddProductData {}

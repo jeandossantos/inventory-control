@@ -111,7 +111,11 @@ describe('ProductService', () => {
     test('should add the passed quantity to the current quantity of the product', async () => {
       const service: ProductService = new ProductService(productRepositoryMock);
 
-      await service.addProduct('some-id', 10);
+      await service.addProduct({
+        productId: 'some-id',
+        quantity: 50,
+        userId: 'some-user',
+      });
 
       expect(productRepositoryMock.addProduct).toHaveBeenCalled();
     });
@@ -121,7 +125,11 @@ describe('ProductService', () => {
     test('should add the passed quantity to the current quantity of the product', async () => {
       const service: ProductService = new ProductService(productRepositoryMock);
 
-      await service.subtractProduct('some-id', 10);
+      await service.subtractProduct({
+        productId: 'some-id',
+        quantity: 50,
+        userId: 'some-user',
+      });
 
       expect(productRepositoryMock.subtractProduct).toHaveBeenCalled();
     });
