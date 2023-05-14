@@ -74,39 +74,6 @@ describe('ProductService', () => {
     });
   });
 
-  describe('#findByCode paginated', () => {
-    test('should not find a product by its code if not exists', async () => {
-      productRepositoryMock.findAll = jest.fn().mockResolvedValue({
-        data: [],
-        count: 50,
-        limit: 10,
-      });
-
-      const service: ProductService = new ProductService(productRepositoryMock);
-
-      const result = await service.findByCode('123456');
-
-      expect(result).toBeFalsy();
-      expect(productRepositoryMock.findByCode).toHaveBeenCalled();
-    });
-
-    test('should find a product by its code if it exists', async () => {
-      productRepositoryMock.findByCode = jest.fn().mockResolvedValue({});
-      productRepositoryMock.findAll = jest.fn().mockResolvedValue({
-        data: [],
-        count: 50,
-        limit: 10,
-      });
-
-      const service: ProductService = new ProductService(productRepositoryMock);
-
-      const result = await service.findByCode('123456');
-
-      expect(result).toBeTruthy();
-      expect(productRepositoryMock.findByCode).toHaveBeenCalled();
-    });
-  });
-
   describe('#addProduct', () => {
     test('should add the passed quantity to the current quantity of the product', async () => {
       const service: ProductService = new ProductService(productRepositoryMock);

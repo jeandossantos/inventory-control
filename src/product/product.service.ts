@@ -30,12 +30,6 @@ export class ProductService {
     return result;
   }
 
-  async findByCode(code: string) {
-    const product = await this.repository.findByCode(code);
-
-    return product;
-  }
-
   async addProduct(dto: AddProductDto) {
     await this.repository.addProduct(dto);
   }
