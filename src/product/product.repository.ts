@@ -52,19 +52,60 @@ export class ProductRepository extends AbstractProductRepository {
     });
   }
 
-  update(id: string, product: UpdateProductDto): Promise<void> {
+  async update(id: string, product: UpdateProductDto): Promise<void> {
+    await this.prisma.product.update({
+      data: product,
+      where: { id },
+    });
+  }
+
+  async findAll(search: string, page: number): Promise<PaginatedProduct> {
+    const limit = 10;
+    const skip = (page - 1) * limit;
+    const where = {
+      OR: [
+        { name: { contains: search, mode: 'insensitive' } },
+        { code: { contains: search, mode: 'insensitive' } },
+      ],
+    };
+
+    const count = await this.prisma.product.count({
+      where: {
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { code: { contains: search, mode: 'insensitive' } },
+        ],
+      },
+    });
+
+    const products = await this.prisma.product.findMany({
+      where: {
+        OR: [
+          { name: { contains: search, mode: 'insensitive' } },
+          { code: { contains: search, mode: 'insensitive' } },
+        ],
+      },
+      skip,
+      take: limit,
+      orderBy: { name: 'desc' },
+    });
+
+    return {
+      count,
+      limit,
+      data: products,
+    };
+  }
+
+  async findByCode(code: string): Promise<IProduct> {
     throw new Error('Method not implemented.');
   }
-  findAll(search: string, page: number): Promise<PaginatedProduct> {
+
+  async addProduct(product: AddProductData): Promise<void> {
     throw new Error('Method not implemented.');
   }
-  findByCode(code: string): Promise<IProduct> {
-    throw new Error('Method not implemented.');
-  }
-  addProduct(product: AddProductData): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  subtractProduct(product: SubtractProductData): Promise<void> {
+
+  async subtractProduct(product: SubtractProductData): Promise<void> {
     throw new Error('Method not implemented.');
   }
 }
