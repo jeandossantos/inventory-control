@@ -6,4 +6,8 @@ export class GetMovementsDto {
 
   @IsDate()
   to?: Date;
+
+  page: number;
+
+  search: string;
 }
