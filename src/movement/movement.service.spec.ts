@@ -1,9 +1,9 @@
 import { BadRequestException } from '@nestjs/common';
-import { MovementRepository } from './movement.repository';
+import { IMovementRepository } from './movement.repository';
 import { MovementService } from './movement.service';
 
 describe('#MovementService', () => {
-  const movementServiceMock: MovementRepository = {
+  const movementServiceMock: IMovementRepository = {
     getAll: jest.fn(),
   };
 
@@ -14,6 +14,8 @@ describe('#MovementService', () => {
       const dto = {
         from: new Date('2023-05-12'),
         to: new Date('2023-05-01'),
+        search: '',
+        page: 1,
       };
 
       const service = new MovementService(movementServiceMock);
@@ -34,9 +36,16 @@ describe('#MovementService', () => {
         limit: 10,
       });
 
+      const dto = {
+        from: new Date('2023-05-12'),
+        to: new Date('2023-05-20'),
+        search: '',
+        page: 1,
+      };
+
       const service = new MovementService(movementServiceMock);
 
-      const result = await service.getAll({});
+      const result = await service.getAll(dto);
 
       expect(movementServiceMock.getAll).toHaveBeenCalled();
       expect(result).toHaveProperty('data');
