@@ -16,22 +16,12 @@ describe('ProductController (e2e)', () => {
   let loggedUser: any;
   let authToken: string;
   let productMock: any;
-
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    prismaService = app.get<PrismaService>(PrismaService);
-
-    await app.init();
-  });
+  let productToBeEdited;
 
   afterAll(async () => {
     await prismaService.movement.deleteMany();
     await prismaService.product.deleteMany();
-    await prismaService.user.deleteMany();
+    await prismaService.user.deleteMany({ where: { id: loggedUser.id } });
     await prismaService.$disconnect();
   });
 
@@ -43,7 +33,17 @@ describe('ProductController (e2e)', () => {
   };
 
   beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    prismaService = app.get<PrismaService>(PrismaService);
+
+    await app.init();
+
     authToken = await tokenGenerator(userMock);
+    productToBeEdited = await createProduct(prismaService, productMock);
   });
 
   describe('/products (POST)', () => {
@@ -80,25 +80,53 @@ describe('ProductController (e2e)', () => {
   describe('/products (PUT)', () => {
     test('should return 401 if user is not logged in', async () => {
       const response = await request(app.getHttpServer())
-        .post('/products')
-        .send({ ...productMock, userId: loggedUser.id });
+        .put(`/products/${productToBeEdited.id}`)
+        .send(productToBeEdited);
+
+      expect(response.status).toBe(401);
+    });
+
+    test('should return 200', async () => {
+      const response = await request(app.getHttpServer())
+        .put(`/products/${productToBeEdited.id}`)
+        .set('Authorization', authToken)
+        .send(productToBeEdited);
+
+      expect(response.status).toBe(200);
+    });
+  });
+
+  describe('/products (GET)', () => {
+    test('should return 401 if user is not logged in', async () => {
+      const response = await request(app.getHttpServer()).get(`/products`);
+
+      expect(response.status).toBe(401);
+    });
+
+    test('should return 200', async () => {
+      const response = await request(app.getHttpServer())
+        .get(`/products?page=1&search='Product'`)
+        .set('Authorization', authToken);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('data');
+      expect(response.body).toHaveProperty('limit');
+      expect(response.body).toHaveProperty('count');
+    });
+  });
+
+  describe('/products/in/:id (PATCH)', () => {
+    test('should return 401 if user is not logged in', async () => {
+      const response = await request(app.getHttpServer())
+        .get(`/products/in/${productToBeEdited.id}`)
+        .send({ quantity: 50 });
 
       expect(response.status).toBe(401);
     });
     test.todo('should return 200');
   });
 
-  describe('/products (GET)', () => {
-    test.todo('should return 401 if user is not logged in');
-    test.todo('should return 200');
-  });
-
-  describe('/products/in (PATCH)', () => {
-    test.todo('should return 401 if user is not logged in');
-    test.todo('should return 200');
-  });
-
-  describe('/products/out (PATCH)', () => {
+  describe('/products/out/:id  (PATCH)', () => {
     test.todo('should return 401 if user is not logged in');
     test.todo('should return 200');
   });
