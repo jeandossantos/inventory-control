@@ -128,7 +128,36 @@ export class ProductRepository extends AbstractProductRepository {
     });
   }
 
-  async subtractProduct(product: SubtractProductData): Promise<void> {
-    throw new Error('Method not implemented.');
+  async subtractProduct({
+    productId,
+    userId,
+    quantity,
+  }: SubtractProductData): Promise<void> {
+    const productDB = await this.prisma.product.findUnique({
+      where: { id: productId },
+    });
+
+    await this.prisma.$transaction(async (prisma) => {
+      const p1 = await prisma.product.update({
+        where: {
+          id: productId,
+        },
+        data: {
+          currentQuantity: productDB.currentQuantity - quantity,
+          quantityOut: productDB.quantityIn + quantity,
+        },
+      });
+
+      await prisma.movement.create({
+        data: {
+          moment: new Date(),
+          quantity,
+          type: 'out',
+          unitPrice: productDB.price,
+          productId,
+          userId,
+        },
+      });
+    });
   }
 }
