@@ -2,10 +2,10 @@ import { IsDate } from 'class-validator';
 
 export class GetMovementsDto {
   @IsDate()
-  from?: string;
+  from?: Date;
 
   @IsDate()
-  to?: string;
+  to?: Date;
 
   page: number;
 
