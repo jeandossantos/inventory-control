@@ -19,7 +19,6 @@ describe('ProductService', () => {
     create: jest.fn(),
     update: jest.fn(),
     findAll: jest.fn(),
-    findByCode: jest.fn(),
     addProduct: jest.fn(),
     subtractProduct: jest.fn(),
   };

@@ -13,7 +13,6 @@ export abstract class AbstractProductRepository {
   abstract create(product: CreateProductData): Promise<void>;
   abstract update(id: string, product: UpdateProductDto): Promise<void>;
   abstract findAll(search: string, page: number): Promise<PaginatedProduct>;
-  abstract findByCode(code: string): Promise<IProduct>;
   abstract addProduct(product: AddProductData): Promise<void>;
   abstract subtractProduct(product: SubtractProductData): Promise<void>;
 }
@@ -89,10 +88,6 @@ export class ProductRepository extends AbstractProductRepository {
       limit,
       data: products,
     };
-  }
-
-  async findByCode(code: string): Promise<IProduct> {
-    throw new Error('Method not implemented.');
   }
 
   async addProduct({
