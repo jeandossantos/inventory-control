@@ -7,6 +7,8 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { MovementService } from './movement.service';
+import { GetMovementsDto } from './types/dtos/getMovementsDto';
+import { ParseDatePipe } from '../@pipes/ParseDatePipe';
 
 @Controller('movements')
 export class MovementController {
@@ -16,14 +18,14 @@ export class MovementController {
   async getAll(
     @Query('search') search: string = '',
     @Query('page', ParseIntPipe) page: number = 1,
-    @Query('from') from: string,
-    @Query('to') to: string,
+    @Query('from', ParseDatePipe) from: Date,
+    @Query('to', ParseDatePipe) to: Date,
   ) {
     return await this.movementService.getAll({
       search,
       page,
-      from,
-      to,
+      to: to,
+      from: from,
     });
   }
 }

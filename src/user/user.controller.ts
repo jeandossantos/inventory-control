@@ -38,8 +38,8 @@ export class UserController {
 
   @Get()
   async getAll(
-    @Query('page', ParseIntPipe) page: number = 1,
-    @Query('search') search: string = '',
+    @Query('page', ParseIntPipe) page: number,
+    @Query('search') search: string,
   ) {
     return await this.userService.getAll(search, page);
   }

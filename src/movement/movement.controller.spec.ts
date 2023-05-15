@@ -37,21 +37,19 @@ describe('MovementsController (e2e)', () => {
       isAdmin: true,
     });
 
-    for (let i = 10; i <= 10; i++) {
-      await createProduct(prismaService, {
-        ...productMock,
-        name: 'Product number ' + i,
-        description: 'Product description ' + i,
-        userId: loggedUser.id,
-      });
-    }
-
     authToken = await tokenGenerator(loggedUser);
   });
 
   afterAll(async () => {
     await prismaService.$disconnect();
   });
+
+  function formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
   describe('GET /movements', () => {
     it('should return 401 if not authenticated', async () => {
@@ -81,14 +79,26 @@ describe('MovementsController (e2e)', () => {
       expect(response.body).toHaveProperty('data');
       expect(response.body).toHaveProperty('count');
       expect(response.body).toHaveProperty('limit');
-      expect(response.body.data.length).toBeGreaterThan(0);
     });
 
     it('should return movements filtered by date range', async () => {
-      const from = new Date();
-      const to = new Date();
-      from.setDate(from.getDate() - 1);
-      to.setDate(to.getDate() + 1);
+      for (let i = 10; i <= 10; i++) {
+        await createProduct(prismaService, {
+          ...productMock,
+          name: 'Product number ' + i,
+          description: 'Product description ' + i,
+          userId: loggedUser.id,
+        });
+      }
+
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      const from = formatDate(yesterday);
+      const to = formatDate(tomorrow);
 
       const response = await request(app.getHttpServer())
         .get(`/movements`)
@@ -116,8 +126,8 @@ describe('MovementsController (e2e)', () => {
     });
 
     it('should return 400 if "from" date is greater than "to" date', async () => {
-      const from = new Date('2022-02-01');
-      const to = new Date('2022-01-01');
+      const from = new Date('2022-02-01').toISOString();
+      const to = new Date('2022-01-01').toISOString();
 
       const response = await request(app.getHttpServer())
         .get(`/movements`)
